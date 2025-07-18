@@ -1,0 +1,18 @@
+{% extends 'layouts/page.njk' %}
+
+{% block pageTitle %}Document Analysis Dashboard{% endblock %}
+
+{% block content %}
+<h1 class="govuk-heading-l">Executive Summary</h1>
+<p class="govuk-body">[Sample summary of the uploaded document will appear here.]</p>
+
+<h2 class="govuk-heading-m">Gap Analysis</h2>
+<ul class="govuk-list govuk-list--bullet">
+  <li>Business case: <span style="color:green;">&#10003; Complete</span></li>
+  <li>Financials: <span style="color:red;">&#9888; Gap identified</span></li>
+  <li>Evidence: <span style="color:green;">&#10003; Complete</span></li>
+</ul>
+
+<h2 class="govuk-heading-m">Multi-modal Evidence</h2>
+<p class="govuk-body">[Extracted tables, graphs, and figures will be shown here.]</p>
+{% endblock %}

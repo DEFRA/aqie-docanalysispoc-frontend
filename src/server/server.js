@@ -12,6 +12,7 @@ import { requestLogger } from './common/helpers/logging/request-logger.js'
 import { sessionCache } from './common/helpers/session-cache/session-cache.js'
 import { getCacheEngine } from './common/helpers/session-cache/cache-engine.js'
 import { secureContext } from './common/helpers/secure-context/secure-context.js'
+import hapiCookie from '@hapi/cookie'
 
 export async function createServer() {
   setupProxy()
@@ -51,6 +52,31 @@ export async function createServer() {
       strictHeader: false
     }
   })
+  await server.register(hapiCookie)
+  //cookie based strategy setup
+  const sessionConfig = config.get('session')
+  const isProduction = config.get('isProduction')
+  server.auth.strategy('login', 'cookie', {
+    cookie: {
+      name: 'cookie-password',
+      path: '/',
+      password: sessionConfig.cookie.password,
+      isSecure: isProduction
+    },
+    redirectTo: '/',
+    keepAlive: true,
+    //to validate cookie content on each request and returns boolean(isauthenticated/not)
+    validate: async (request, session) => {
+      if (session.password === sessionConfig.cookie.docPassword) {
+        return { isValid: true }
+      } else {
+        return { isValid: true }
+      }
+    }
+  })
+  //register with every route to use correct credentials with cookies
+  server.auth.default({ strategy: 'login', mode: 'required' })
+
   await server.register([
     requestLogger,
     requestTracing,
