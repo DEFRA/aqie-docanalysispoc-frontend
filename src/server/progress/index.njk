@@ -1,0 +1,32 @@
+{% extends 'layouts/page.njk' %}
+{% block pageTitle %}Analyzing Document{% endblock %}
+{% block content %}
+<h1 class="govuk-heading-l">Analyzing Document</h1>
+<p class="govuk-body">Processing {{ file }}</p>
+<div class="govuk-panel govuk-panel--confirmation" style="margin-top:2em;">
+  <h2 class="govuk-heading-m">Analysis Progress</h2>
+  <div style="margin-bottom:1em;">
+    <span style="float:right;color:#1d70b8;">0% Complete</span>
+    <div style="background:#e7f2fa;height:8px;border-radius:4px;">
+      <div style="width:0%;height:8px;background:#1d70b8;border-radius:4px;" id="progressBar"></div>
+    </div>
+  </div>
+  <div class="govuk-inset-text">
+    <strong>Analyzing</strong><br>
+    Analyzing content with AI (this may take a few minutes for large documents)
+  </div>
+</div>
+<a href="/home" class="govuk-button govuk-button--secondary" style="margin-top:2em;">Back to Home</a>
+<script>
+  // Simulate progress bar
+  let percent = 0;
+  const bar = document.getElementById('progressBar');
+  const percentText = document.querySelector('span');
+  const interval = setInterval(() => {
+    percent += 5;
+    bar.style.width = percent + '%';
+    percentText.textContent = percent + '% Complete';
+    if (percent >= 100) clearInterval(interval);
+  }, 200);
+</script>
+{% endblock %}

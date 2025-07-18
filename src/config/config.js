@@ -158,6 +158,13 @@ export const config = convict({
         format: Boolean,
         default: isProduction,
         env: 'SESSION_COOKIE_SECURE'
+      },
+      docPassword: {
+        doc: 'password for poc',
+        format: '*',
+        default: 'password',
+        sensitive: true,
+        env: 'POC_PASSWORD'
       }
     }
   },

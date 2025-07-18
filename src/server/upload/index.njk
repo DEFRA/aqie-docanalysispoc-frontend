@@ -1,0 +1,30 @@
+{% extends 'layouts/page.njk' %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}Upload Policy Document{% endblock %}
+
+{% block content %}
+<h1 class="govuk-heading-l">Upload a Policy Document (PDF)</h1>
+<form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+  <div class="govuk-form-group">
+    <label class="govuk-label" for="policyPdf">Select PDF file</label>
+    <input class="govuk-file-upload" id="policyPdf" name="policyPdf" type="file" accept="application/pdf" required>
+  </div>
+  {{ govukButton({ text: "Upload", attributes: { type: "submit" } }) }}
+</form>
+<div id="fileInfo" style="margin-top:1em; display:none;">
+  <strong>Selected file:</strong> <span id="fileName"></span>
+</div>
+<div id="progressContainer" style="display:none;">
+  <label for="progressBar">Uploading:</label>
+  <progress id="progressBar" value="0" max="100" style="width:100%;"></progress>
+</div>
+<div id="feedbackArea">
+  {% if status == 'processing' %}
+    <div class="govuk-inset-text">Parsing document... Analysing tables... Generating summary... Validating business case...</div>
+  {% elif status == 'error' %}
+    <div class="govuk-error-summary">{{ message }}</div>
+  {% endif %}
+</div>
+<script src="/js/upload.js"></script>
+{% endblock %}
