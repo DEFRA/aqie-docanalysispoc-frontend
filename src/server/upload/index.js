@@ -2,14 +2,18 @@ import fs from 'fs'
 import path from 'path'
 import { pipeline } from 'stream'
 import util from 'util'
+import { pdfParse } from '../utils/pdfParser.js'
 
 const pump = util.promisify(pipeline)
+
+
 
 export const upload = {
   plugin: {
     name: 'upload',
     register: async (server) => {
       server.route([
+
         {
           method: 'GET',
           path: '/upload',
@@ -27,7 +31,7 @@ export const upload = {
               output: 'stream',
               parse: true,
               multipart: true,
-              maxBytes: 10 * 1024 * 1024, // 10MB limit
+              maxBytes: 50 * 1024 * 1024, // 10MB limit
               allow: 'multipart/form-data'
             }
           },
@@ -48,8 +52,33 @@ export const upload = {
             const filename = `${Date.now()}-${file.hapi.filename}`
             const filepath = path.join(uploadDir, filename)
             await pump(file, fs.createWriteStream(filepath))
-            // Redirect to progress page with filename
-            return h.redirect(`/progress?file=${encodeURIComponent(filename)}`)
+
+            try {
+              // Process the PDF directly
+              const fileBuffer = fs.readFileSync(filepath);
+              const pdfText = await pdfParse(fileBuffer);
+              
+              // Format the PDF text as markdown
+              let markdownContent = '';
+              if (pdfText && Array.isArray(pdfText)) {
+                markdownContent = pdfText.map(page => {
+                  return `## Page ${page.pageNumber}\n\n${page.content}`;
+                }).join('\n\n');
+              }
+              
+              // Return the view with the markdown content
+              return h.view('upload/index', {
+                status: 'success',
+                markdownContent: markdownContent,
+                filename: file.hapi.filename
+              });
+            } catch (error) {
+              console.error('Error parsing PDF:', error);
+              return h.view('upload/index', {
+                status: 'error',
+                message: 'Error processing PDF: ' + error.message
+              });
+            }
           }
         }
       ])

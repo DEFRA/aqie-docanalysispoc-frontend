@@ -51,13 +51,8 @@ describe.skip('context and cache', () => {
           navigation: [
             {
               current: true,
-              text: 'Home',
-              href: '/'
-            },
-            {
-              current: false,
               text: 'Upload',
-              href: '/upload'
+              href: '/'
             },
             {
               current: false,
@@ -150,13 +145,8 @@ describe.skip('context and cache', () => {
           navigation: [
             {
               current: true,
-              text: 'Home',
-              href: '/'
-            },
-            {
-              current: false,
               text: 'Upload',
-              href: '/upload'
+              href: '/'
             },
             {
               current: false,

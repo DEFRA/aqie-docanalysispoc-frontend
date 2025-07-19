@@ -5,7 +5,7 @@ const loginController = {
   handler: (request, h) => {
     if (request.auth.isAuthenticated) {
       console.log('Inside Login Controller')
-      return h.redirect('/home')
+      return h.redirect('/upload')
     } else {
       const errors = request.yar.get('errors')
       const errorMessage = request.yar.get('errorMessage')
@@ -14,7 +14,7 @@ const loginController = {
       return h.view('login/index', {
         pageTitle: 'Login Page - GOV.UK',
         heading: 'Login Page',
-        page: 'home',
+        page: 'upload',
         serviceName: '',
         errors: errors?.errors,
         errorMessage: errorMessage?.errorMessage
@@ -30,7 +30,7 @@ const authController = {
       //once user loggedin , set the cookie with user data and send back cookie with authentication
       //this info will also be validated in serverside using validate function
       request.cookieAuth.set({ password: request.payload.password })
-      return h.redirect('/home')
+      return h.redirect('/upload')
     } else {
       request.yar.set('errors', {
         errors: {
