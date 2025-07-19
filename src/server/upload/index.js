@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { pipeline } from 'stream'
 import util from 'util'
-import { pdfParse } from '../utils/pdfParser.js'
+import { parsePdfToJson } from '../utils/pdfParser.js'
 
 const pump = util.promisify(pipeline)
 
@@ -51,11 +51,10 @@ export const upload = {
             await pump(file, fs.createWriteStream(filepath))
 
             try {
-              // Process the PDF directly
-              const fileBuffer = fs.readFileSync(filepath)
-              const pdfText = await pdfParse(fileBuffer)
 
-              // Format the PDF text as markdown
+              const pdfText = await parsePdfToJson(filepath);
+              await fs.unlinkSync(filepath);
+
               let markdownContent = ''
               if (pdfText && Array.isArray(pdfText)) {
                 markdownContent = pdfText
