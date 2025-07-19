@@ -16,25 +16,24 @@ document.addEventListener('DOMContentLoaded', function () {
       // Show spinner and wait cursor
       fileSpinner.style.display = 'inline-block'
       document.body.style.cursor = 'wait'
-      
+
       // Simulate a delay for file processing
-      setTimeout(function() {
+      setTimeout(function () {
         // Hide spinner after "processing"
         fileSpinner.style.display = 'none'
         document.body.style.cursor = 'default'
-        
+
         // Now show the file info
         if (fileInput.files[0].type === 'application/pdf') {
           fileInfo.style.display = 'block'
           fileNameSpan.textContent = fileInput.files[0].name
           // Hide any previous analysis results
-          markdownContent.style.display = 'none';
+          markdownContent.style.display = 'none'
         } else {
           fileInfo.style.display = 'none'
           fileNameSpan.textContent = ''
-          alert('Please upload a PDF file.')
         }
-      }, 1000); // 1 second delay to simulate file processing
+      }, 1000)
     } else {
       // No file was selected
       fileInfo.style.display = 'none'
@@ -43,7 +42,10 @@ document.addEventListener('DOMContentLoaded', function () {
   })
 
   uploadForm.addEventListener('submit', function () {
-    if (fileInput.files.length && fileInput.files[0].type === 'application/pdf') {
+    if (
+      fileInput.files.length &&
+      fileInput.files[0].type === 'application/pdf'
+    ) {
       progressContainer.style.display = 'block'
       document.body.style.cursor = 'wait'
 

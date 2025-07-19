@@ -6,14 +6,11 @@ import { pdfParse } from '../utils/pdfParser.js'
 
 const pump = util.promisify(pipeline)
 
-
-
 export const upload = {
   plugin: {
     name: 'upload',
     register: async (server) => {
       server.route([
-
         {
           method: 'GET',
           path: '/upload',
@@ -55,29 +52,31 @@ export const upload = {
 
             try {
               // Process the PDF directly
-              const fileBuffer = fs.readFileSync(filepath);
-              const pdfText = await pdfParse(fileBuffer);
-              
+              const fileBuffer = fs.readFileSync(filepath)
+              const pdfText = await pdfParse(fileBuffer)
+
               // Format the PDF text as markdown
-              let markdownContent = '';
+              let markdownContent = ''
               if (pdfText && Array.isArray(pdfText)) {
-                markdownContent = pdfText.map(page => {
-                  return `## Page ${page.pageNumber}\n\n${page.content}`;
-                }).join('\n\n');
+                markdownContent = pdfText
+                  .map((page) => {
+                    return `## Page ${page.pageNumber}\n\n${page.content}`
+                  })
+                  .join('\n\n')
               }
-              
+
               // Return the view with the markdown content
               return h.view('upload/index', {
                 status: 'success',
                 markdownContent: markdownContent,
                 filename: file.hapi.filename
-              });
+              })
             } catch (error) {
-              console.error('Error parsing PDF:', error);
+              console.error('Error parsing PDF:', error)
               return h.view('upload/index', {
                 status: 'error',
                 message: 'Error processing PDF: ' + error.message
-              });
+              })
             }
           }
         }
