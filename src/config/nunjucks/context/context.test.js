@@ -56,16 +56,11 @@ describe.skip('context and cache', () => {
             },
             {
               current: false,
-              text: 'Dashboard',
-              href: '/dashboard'
-            },
-            {
-              current: false,
-              text: 'Progress',
-              href: '/progress'
+              text: 'Logout',
+              href: '/logout'
             }
           ],
-          serviceName: 'aqie-docanalysispoc-frontend',
+          serviceName: 'Defra Policy Summarisation (POC)',
           serviceUrl: '/'
         })
       })
@@ -150,16 +145,11 @@ describe.skip('context and cache', () => {
             },
             {
               current: false,
-              text: 'Dashboard',
-              href: '/dashboard'
-            },
-            {
-              current: false,
-              text: 'Progress',
-              href: '/progress'
+              text: 'Logout',
+              href: '/logout'
             }
           ],
-          serviceName: 'aqie-docanalysispoc-frontend',
+          serviceName: 'Defra Policy Summarisation (POC)',
           serviceUrl: '/'
         })
       })

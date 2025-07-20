@@ -44,7 +44,7 @@ export const config = convict({
   serviceName: {
     doc: 'Applications Service Name',
     format: String,
-    default: 'aqie-docanalysispoc-frontend'
+    default: 'Defra Policy Summarisation (POC)'
   },
   root: {
     doc: 'Project root',
