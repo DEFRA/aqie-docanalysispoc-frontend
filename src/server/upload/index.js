@@ -3,7 +3,8 @@ import path from 'path'
 import { pipeline } from 'stream'
 import util from 'util'
 import { parsePdfToJson } from '../utils/pdfParser.js'
-
+import { config } from '../../config/config.js'
+import axios from 'axios'
 const pump = util.promisify(pipeline)
 
 export const upload = {
@@ -58,8 +59,6 @@ export const upload = {
               const pdfText = await parsePdfToJson(filepath)
               await fs.unlinkSync(filepath)
 
-                         
-
               let markdownContent = ''
               if (pdfText && Array.isArray(pdfText)) {
                 markdownContent = pdfText
@@ -68,12 +67,42 @@ export const upload = {
                   })
                   .join('\n\n')
               }
+              // const openAiEndpoint =
+              //   'https://tradeplatform-ai.openai.azure.com/openai/deployments/<deployment-id>/chat/completions?api-version=2023-07-01-preview'
+              const openAiEndpoint =
+                'https://tradeplatform-ai.openai.azure.com/openai/deployments/my-gpt4-deployment/chat/completions?api-version=2023-07-01-preview'
+
+              const apiKey = config.get('aiOpenApiKey') // Store this securely
+              const response = await axios.post(
+                openAiEndpoint,
+                {
+                  messages: [
+                    {
+                      role: 'system',
+                      content:
+                        'You are an assistant that summarizes policy documents.'
+                    },
+                    { role: 'user', content: pdfText }
+                  ],
+                  temperature: 0.7,
+                  max_tokens: 1000
+                },
+                {
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'api-key': apiKey
+                  }
+                }
+              )
+
+              const summary = response.data.choices[0].message.content
 
               // Return the view with the markdown content
               return h.view('upload/index', {
                 isAuthenticated: request.auth.isAuthenticated,
                 status: 'success',
                 markdownContent: markdownContent,
+                summary,
                 filename: file.hapi.filename
               })
             } catch (error) {

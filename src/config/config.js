@@ -227,14 +227,18 @@ export const config = convict({
       env: 'TRACING_HEADER'
     }
   },
-  openai: {
-    apiKey: {
-      doc: 'OpenAI API key for text summarization',
-      format: String,
-      default: '',
-      sensitive: true,
-      env: 'OPENAI_API_KEY'
-    }
+  aiOpenApiKey: {
+    doc: 'AI Open API Azure key',
+    format: '*',
+    sensitive: true,
+    default: '',
+    env: 'OPEN_AI_KEY'
+  },
+  aiOpenApiUrl: {
+    doc: 'AI Open API Azure url',
+    format: String,
+    default: 'https://tradeplatform-ai.openai.azure.com/',
+    env: 'AI_OPEN_API_URL'
   }
 })
 
