@@ -6,7 +6,7 @@
 {% block bodyAttributes %}{% if processingId %} data-processing-id="{{ processingId }}"{% endif %}{% endblock %}
 
 {% block content %}
-<h1 class="govuk-heading-l">Upload a Policy Document (PDF)</h1>
+<h1 class="govuk-heading-m">Upload a Document to Generate AI-Powered Insights</h1>
 <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data" onsubmit="document.getElementById('submitButton').disabled = true; document.getElementById('loadingMessage').style.display = 'block';">
   <div class="govuk-form-group">
     <label class="govuk-label" for="policyPdf">Select PDF file</label>

@@ -16,7 +16,10 @@ export const upload = {
           path: '/upload',
           options: { auth: { strategy: 'login', mode: 'required' } },
           handler: (request, h) => {
-            return h.view('upload/index', { status: null })
+            return h.view('upload/index', {
+              isAuthenticated: request.auth.isAuthenticated,
+              status: null
+            })
           }
         },
         {
@@ -40,6 +43,7 @@ export const upload = {
               file.hapi.headers['content-type'] !== 'application/pdf'
             ) {
               return h.view('upload/index', {
+                isAuthenticated: request.auth.isAuthenticated,
                 status: 'error',
                 message: 'Please upload a PDF file.'
               })
@@ -51,9 +55,8 @@ export const upload = {
             await pump(file, fs.createWriteStream(filepath))
 
             try {
-
-              const pdfText = await parsePdfToJson(filepath);
-              await fs.unlinkSync(filepath);
+              const pdfText = await parsePdfToJson(filepath)
+              await fs.unlinkSync(filepath)
 
                          
 
@@ -68,6 +71,7 @@ export const upload = {
 
               // Return the view with the markdown content
               return h.view('upload/index', {
+                isAuthenticated: request.auth.isAuthenticated,
                 status: 'success',
                 markdownContent: markdownContent,
                 filename: file.hapi.filename
@@ -75,6 +79,7 @@ export const upload = {
             } catch (error) {
               console.error('Error parsing PDF:', error)
               return h.view('upload/index', {
+                isAuthenticated: request.auth.isAuthenticated,
                 status: 'error',
                 message: 'Error processing PDF: ' + error.message
               })

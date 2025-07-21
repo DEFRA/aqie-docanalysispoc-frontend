@@ -42,7 +42,9 @@ progress::-moz-progress-bar {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to { 
+    transform: rotate(360deg); 
+  }
 }
 
 .file-selection-area {

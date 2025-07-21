@@ -1,5 +1,5 @@
 import PDFParser from 'pdf2json'
-import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
+import { PDFLoader } from '@langchain/community/document_loaders/fs/pdf'
 
 export async function pdfParse(buffer) {
   return new Promise((resolve, reject) => {
@@ -25,13 +25,13 @@ export async function pdfParse(buffer) {
 }
 
 export async function parsePdfToJson(filePath) {
-  const loader = new PDFLoader(filePath, { splitPages: true });
-  const docs = await loader.load();
+  const loader = new PDFLoader(filePath, { splitPages: true })
+  const docs = await loader.load()
 
   const jsonPages = docs.map((doc, index) => ({
     pageNumber: index + 1,
     content: doc.pageContent
-  }));
+  }))
 
-  return jsonPages;
+  return jsonPages
 }
