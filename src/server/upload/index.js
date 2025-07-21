@@ -5,7 +5,7 @@ import util from 'util'
 import { parsePdfToJson } from '../utils/pdfParser.js'
 import { config } from '../../config/config.js'
 import axios from 'axios'
-import logger from '../../server/common/helpers/logging/logger.js'
+import { createLogger } from '../../server/common/helpers/logging/logger.js'
 
 const logger = createLogger()
 const pump = util.promisify(pipeline)
