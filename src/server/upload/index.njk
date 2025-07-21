@@ -35,6 +35,14 @@
 
 <div id="markdownContent" class="govuk-body markdown-content" style="{% if not markdownContent %}display: none;{% endif %} margin-top: 2em;">
   <h2 class="govuk-heading-m">Summarisation & Critical gap analysis</h2>
+  
+  {% if summary %}
+  <div class="govuk-inset-text summary-section">
+    <h3 class="govuk-heading-s">AI-Generated Summary</h3>
+    <p>{{ summary | safe }}</p>
+  </div>
+  {% endif %}
+  
   <div id="markdownRenderer">
     {% if markdownContent %}
       <script>

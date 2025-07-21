@@ -55,6 +55,8 @@ export const upload = {
               const pdfText = await parsePdfToJson(filepath);
               await fs.unlinkSync(filepath);
 
+                         
+
               let markdownContent = ''
               if (pdfText && Array.isArray(pdfText)) {
                 markdownContent = pdfText

@@ -226,6 +226,15 @@ export const config = convict({
       default: 'x-cdp-request-id',
       env: 'TRACING_HEADER'
     }
+  },
+  openai: {
+    apiKey: {
+      doc: 'OpenAI API key for text summarization',
+      format: String,
+      default: '',
+      sensitive: true,
+      env: 'OPENAI_API_KEY'
+    }
   }
 })
 

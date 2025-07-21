@@ -49,3 +49,18 @@ progress::-moz-progress-bar {
   display: flex;
   align-items: center;
 }
+
+.summary-section {
+  background-color: #f8f8f8;
+  border-left: 5px solid #1d70b8;
+  margin-bottom: 2em;
+}
+
+.summary-section h3 {
+  margin-top: 0;
+  color: #1d70b8;
+}
+
+.summary-section p {
+  margin-bottom: 0;
+}
