@@ -70,7 +70,7 @@ export const upload = {
               // const openAiEndpoint =
               //   'https://tradeplatform-ai.openai.azure.com/openai/deployments/<deployment-id>/chat/completions?api-version=2023-07-01-preview'
               const openAiEndpoint =
-                'https://tradeplatform-ai.openai.azure.com/openai/deployments/my-gpt4-deployment/chat/completions?api-version=2023-07-01-preview'
+                'https://tradeplatform-ai.openai.azure.com/openai/deployments/gpt-4/chat/completions?api-version=2023-07-01-preview'
 
               const apiKey = config.get('aiOpenApiKey') // Store this securely
               const response = await axios.post(
