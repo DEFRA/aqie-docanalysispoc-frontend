@@ -5,6 +5,9 @@ import util from 'util'
 import { parsePdfToJson } from '../utils/pdfParser.js'
 import { config } from '../../config/config.js'
 import axios from 'axios'
+import logger from '../../server/common/helpers/logging/logger.js'
+
+const logger = createLogger()
 const pump = util.promisify(pipeline)
 
 export const upload = {
@@ -106,7 +109,10 @@ export const upload = {
                 filename: file.hapi.filename
               })
             } catch (error) {
-              console.error('Error parsing PDF:', error)
+              logger.error(`Error while parsing PDF: ${error}`)
+              logger.error(
+                `JSON Error while parsing PDF: ${JSON.stringify(error)}`
+              )
               return h.view('upload/index', {
                 isAuthenticated: request.auth.isAuthenticated,
                 status: 'error',
