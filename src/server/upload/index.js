@@ -18,10 +18,12 @@ export const upload = {
         {
           method: 'GET',
           path: '/upload',
-          options: { auth: { strategy: 'login', mode: 'required' } },
+          options: { auth: 'sso' },
           handler: (request, h) => {
+            const user = request.auth.credentials.user
             return h.view('upload/index', {
-              isAuthenticated: request.auth.isAuthenticated,
+              isAuthenticated: true,
+              user: user,
               status: null
             })
           }
@@ -30,12 +32,12 @@ export const upload = {
           method: 'POST',
           path: '/upload',
           options: {
-            auth: { strategy: 'login', mode: 'required' },
+            auth: 'sso',
             payload: {
               output: 'stream',
               parse: true,
               multipart: true,
-              maxBytes: 50 * 1024 * 1024, // 10MB limit
+              maxBytes: 50 * 1024 * 1024, // 50MB limit
               allow: 'multipart/form-data'
             }
           },
@@ -47,7 +49,8 @@ export const upload = {
               file.hapi.headers['content-type'] !== 'application/pdf'
             ) {
               return h.view('upload/index', {
-                isAuthenticated: request.auth.isAuthenticated,
+                isAuthenticated: true,
+                user: request.auth.credentials.user,
                 status: 'error',
                 message: 'Please upload a PDF file.'
               })
@@ -100,7 +103,8 @@ export const upload = {
                 
                 // Return the view with both summary and markdown content
                 return h.view('upload/index', {
-                  isAuthenticated: request.auth.isAuthenticated,
+                  isAuthenticated: true,
+                  user: request.auth.credentials.user,
                   status: 'success',
                   markdownContent: summary,
                   filename: file.hapi.filename
@@ -116,10 +120,10 @@ export const upload = {
                 
                 // Return the view with just the markdown content
                 return h.view('upload/index', {
-                  isAuthenticated: request.auth.isAuthenticated,
+                  isAuthenticated: true,
+                  user: request.auth.credentials.user,
                   status: 'success',
-                  markdownContent: markdownContent,
-                  summary: 'Unable to generate summary. Using raw document content instead.',
+                  markdownContent: 'Unable to generate summary. Using raw document content instead.',
                   filename: file.hapi.filename
                 })
               }
@@ -129,7 +133,8 @@ export const upload = {
                 `JSON Error while parsing PDF: ${JSON.stringify(error)}`
               )
               return h.view('upload/index', {
-                isAuthenticated: request.auth.isAuthenticated,
+                isAuthenticated: true,
+                user: request.auth.credentials.user,
                 status: 'error',
                 message: 'Error processing PDF: ' + error.message
               })

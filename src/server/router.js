@@ -1,7 +1,8 @@
 import inert from '@hapi/inert'
 import { health } from './health/index.js'
-import { login } from './login/index.js'
 import { upload } from './upload/index.js'
+import { ssoAuth } from './auth/sso.js'
+import { home } from './home/index.js'
 import { serveStaticFiles } from './common/helpers/serve-static-files.js'
 
 export const router = {
@@ -13,8 +14,11 @@ export const router = {
       // Health-check route. Used by platform to check if service is running, do not remove!
       await server.register([health])
 
+      // Register SSO authentication
+      await server.register([ssoAuth])
+      
       // Application specific routes, add your own routes here
-      await server.register([login, upload])
+      await server.register([home, upload])
 
       // Static assets
       await server.register([serveStaticFiles])

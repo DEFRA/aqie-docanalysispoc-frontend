@@ -46,12 +46,26 @@ document.addEventListener('DOMContentLoaded', function () {
       fileInput.files.length &&
       fileInput.files[0].type === 'application/pdf'
     ) {
-      progressContainer.style.display = 'block'
-      document.body.style.cursor = 'wait'
+      // Clear previous markdown content
+      if (markdownContent) {
+        markdownContent.style.display = 'none';
+        const markdownRenderer = document.getElementById('markdownRenderer');
+        if (markdownRenderer) {
+          markdownRenderer.innerHTML = '';
+        }
+      }
+      
+      // Show loading message
+      const loadingMessage = document.getElementById('loadingMessage');
+      if (loadingMessage) {
+        loadingMessage.style.display = 'block';
+      }
+      
+      document.body.style.cursor = 'wait';
 
-      const submitButton = uploadForm.querySelector('button[type="submit"]')
+      const submitButton = uploadForm.querySelector('button[type="submit"]');
       if (submitButton) {
-        submitButton.disabled = true
+        submitButton.disabled = true;
       }
     }
   })
