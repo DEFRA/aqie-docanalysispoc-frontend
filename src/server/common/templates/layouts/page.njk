@@ -48,6 +48,9 @@
     <div class="govuk-width-container" style="display: flex; justify-content: flex-start; align-items: center; margin-top: -37px;">
       <div style="color: white;">
         <span>Welcome, {{ user.name }}</span>
+        {% if user.azureId %}
+        <span style="margin-left: 10px; font-size: 0.8em;">({{ user.azureId }})</span>
+        {% endif %}
       </div>
     </div>
     {% endif %}

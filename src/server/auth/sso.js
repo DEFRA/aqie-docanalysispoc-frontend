@@ -1,7 +1,7 @@
 import { config } from '../../config/config.js'
 import { createLogger } from '../common/helpers/logging/logger.js'
 import { getWindowsUsername } from '../utils/windowsUser.js'
-import { getMicrosoftAccountInfo } from '../utils/msAccountInfo.js'
+import { getAzureUserInfo } from '../utils/azureAuth.js'
 
 const logger = createLogger()
 
@@ -23,9 +23,9 @@ export const ssoAuth = {
               }
             }
 
-            // Try to get Microsoft account information first
-            const msAccountInfo = getMicrosoftAccountInfo(request);
-            logger.info(`Microsoft account info: ${JSON.stringify(msAccountInfo)}`);
+            // Try to get Azure AD user information first
+            const azureUser = getAzureUserInfo(request);
+            logger.info(`Azure user info: ${JSON.stringify(azureUser)}`);
             
             // Get allowed domains from config
             const allowedDomains = config.get('auth.allowedDomains');
@@ -33,21 +33,16 @@ export const ssoAuth = {
             
             let username, email, domain, isAllowedUser;
             
-            // If we have Microsoft account information, use it
-            if (msAccountInfo && msAccountInfo.email) {
-              email = msAccountInfo.email;
-              username = email.split('@')[0];
-              domain = email.split('@')[1];
+            // If we have Azure AD user information, use it
+            if (azureUser && (azureUser.email || azureUser.id)) {
+              email = azureUser.email || `${azureUser.id}@defra.gov.uk`;
+              username = azureUser.name || (email ? email.split('@')[0] : azureUser.id);
+              domain = email.includes('@') ? email.split('@')[1] : 'defra.gov.uk';
               
-              // Check if email domain is allowed
-              const emailDomain = domain.toLowerCase();
-              const isAllowedEmailDomain = allowedDomains.some(allowedDomain => 
-                emailDomain.endsWith(allowedDomain.toLowerCase())
-              );
+              // In production, always allow access for Azure users
+              isAllowedUser = true;
               
-              isAllowedUser = isProduction ? true : isAllowedEmailDomain;
-              
-              logger.info(`Using Microsoft account: ${email}, Domain: ${domain}, Allowed: ${isAllowedUser}`);
+              logger.info(`Using Azure AD account: ${email}, Name: ${username}, ID: ${azureUser.id}, Allowed: ${isAllowedUser}`);
             } else {
               // Fall back to Windows username
               username = getWindowsUsername();
@@ -88,9 +83,9 @@ export const ssoAuth = {
             // Format display name
             let displayName;
             
-            if (msAccountInfo && msAccountInfo.name) {
-              // Use Microsoft account display name if available
-              displayName = msAccountInfo.name;
+            if (azureUser && azureUser.name) {
+              // Use Azure AD display name if available
+              displayName = azureUser.name;
             } else {
               // Format Windows username for display
               displayName = username;
@@ -105,10 +100,11 @@ export const ssoAuth = {
             
             // Create user object
             const user = {
-              id: msAccountInfo?.id || username,
+              id: azureUser?.id || username,
               name: displayName,
               email: email,
-              source: msAccountInfo ? 'microsoft-account' : 'windows-user',
+              azureId: azureUser?.id || null,
+              source: azureUser ? 'azure-ad' : 'windows-user',
               roles: ['user']
             }
 

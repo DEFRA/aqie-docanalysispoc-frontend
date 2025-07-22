@@ -1,4 +1,5 @@
 import { createLogger } from '../common/helpers/logging/logger.js'
+import os from 'os';
 
 const logger = createLogger()
 
@@ -13,8 +14,7 @@ export const home = {
           handler: (request, h) => {
             // Get user info from credentials
             const user = request.auth.credentials.user
-            logger.info(`User ${user.name} accessed home page`)
-            
+
             // Redirect directly to upload page
             return h.redirect('/upload')
           },
