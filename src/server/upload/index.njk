@@ -24,7 +24,6 @@
 <div id="fileInfo" style="margin-top:1em; display:none;">
   <strong>Selected file:</strong> <span id="fileName"></span>
 </div>
-<!-- Progress container removed -->
 <div id="feedbackArea">
   {% if status == 'processing' %}
     <div class="govuk-inset-text">Parsing document... Analysing tables... Generating summary... Validating business case...</div>
@@ -73,6 +72,5 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="/public/javascripts/markdown-renderer.js"></script>
-<!-- pdf-progress.js removed -->
 <script src="/public/javascripts/upload.js"></script>
 {% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'layouts/page.njk' %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}Policy Document Summarisation (POC){% endblock %}
+
+{% block content %}
+<h2 class="govuk-heading-xl">Upload a Document to Generate AI-Powered Insights</h2>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <form id="uploadForm" class="govuk-form-group" action="/" method="post" enctype="multipart/form-data">
+      <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+          Upload a policy document
+        </legend>
+        
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="policyPdf">
+            Upload a PDF file
+          </label>
+          <input class="govuk-file-upload" id="policyPdf" name="policyPdf" type="file" accept="application/pdf" required>
+          <div id="fileSpinner" class="spinner" style="display: none;"></div>
+        </div>
+        
+        <div id="fileInfo" class="govuk-inset-text" style="display: none;">
+          Selected file: <span id="fileName"></span>
+        </div>
+        
+        {{ govukButton({
+          text: "Analyze Document",
+          attributes: {
+            id: "submitButton"
+          }
+        }) }}
+      </fieldset>
+    </form>
+    
+    <div id="loadingMessage" class="govuk-panel govuk-panel--confirmation" style="display: none;">
+      <h2 class="govuk-panel__title">
+        Processing document...
+      </h2>
+      <div class="govuk-panel__body">
+        This may take a few moments
+      </div>
+    </div>
+    
+    <div id="feedbackArea">
+      {% if status == 'error' %}
+        <div class="govuk-error-summary">{{ message }}</div>
+      {% endif %}
+    </div>
+    
+    <div id="markdownContent" class="govuk-!-margin-top-6" style="{% if not markdownContent %}display: none;{% endif %}">
+      <h2 class="govuk-heading-l">Document Summary</h2>
+      <div id="markdownRenderer" class="govuk-body markdown-body">
+        {% if markdownContent %}
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              const markdownContent = `{{ markdownContent | safe }}`;
+              document.getElementById('markdownRenderer').innerHTML = window.marked.parse(markdownContent);
+              
+              // Apply GOV.UK styling to tables
+              document.querySelectorAll('#markdownRenderer table').forEach((table) => {
+                table.classList.add('govuk-table');
+                table.querySelectorAll('thead').forEach((thead) => {
+                  thead.classList.add('govuk-table__head');
+                });
+                table.querySelectorAll('tbody').forEach((tbody) => {
+                  tbody.classList.add('govuk-table__body');
+                });
+                table.querySelectorAll('th').forEach((th) => {
+                  th.classList.add('govuk-table__header');
+                });
+                table.querySelectorAll('td').forEach((td) => {
+                  td.classList.add('govuk-table__cell');
+                });
+              });
+            });
+          </script>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/public/javascripts/pdf-upload.js"></script>
+{% endblock %}

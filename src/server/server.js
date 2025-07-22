@@ -55,7 +55,7 @@ export async function createServer() {
     }
   })
 
-  // SSO authentication will be registered via the ssoAuth plugin
+  // Register plugins
   await server.register([
     requestLogger,
     requestTracing,

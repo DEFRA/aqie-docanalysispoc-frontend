@@ -227,24 +227,31 @@ export const config = convict({
       env: 'TRACING_HEADER'
     }
   },
-  aiOpenApiKey: {
-    doc: 'AI Open API Azure key',
-    format: '*',
-    sensitive: true,
-    default: '',
-    env: 'OPEN_AI_KEY'
-  },
-  aiOpenApiUrl: {
-    doc: 'AI Open API Azure url',
-    format: String,
-    default: 'https://tradeplatform-ai.openai.azure.com/',
-    env: 'AI_OPEN_API_URL'
+  backend: {
+    url: {
+      doc: 'Backend API URL',
+      format: String,
+      default:  `https://aqie-docanalysispoc-backend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
+      env: 'BACKEND_URL'
+    },
+    endpoint: {
+      doc: 'Backend API endpoint for document summarization',
+      format: String,
+      default: '/api/documents/summarize',
+      env: 'BACKEND_ENDPOINT'
+    },
+    testEndpoint: {
+      doc: 'Backend API test endpoint',
+      format: String,
+      default: '/test',
+      env: 'BACKEND_TEST_ENDPOINT'
+    }
   },
   auth: {
     allowedDomains: {
       doc: 'List of allowed domains (Windows domains and email domains)',
       format: Array,
-      default: ['defra.gov.uk', 'defra.onmicrosoft.com','cognizant.com'],
+      default: ['defra.gov.uk', 'defra.onmicrosoft.com'],
       env: 'ALLOWED_DOMAINS'
     }
   }
