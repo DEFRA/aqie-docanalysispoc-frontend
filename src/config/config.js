@@ -242,9 +242,9 @@ export const config = convict({
   },
   auth: {
     allowedDomains: {
-      doc: 'List of allowed Windows domains',
+      doc: 'List of allowed domains (Windows domains and email domains)',
       format: Array,
-      default: ['defra', 'environment-agency', 'naturalengland', 'rpa'],
+      default: ['defra.gov.uk', 'defra.onmicrosoft.com','cognizant.com'],
       env: 'ALLOWED_DOMAINS'
     }
   }

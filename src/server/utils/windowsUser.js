@@ -22,18 +22,37 @@ export function getWindowsUsername() {
     
     // As a last resort, try to execute whoami command
     if (process.platform === 'win32') {
-      const whoami = execSync('whoami').toString().trim();
-      if (whoami) {
-        // Extract username from domain\username format
-        const parts = whoami.split('\\');
-        return parts.length > 1 ? parts[1] : whoami;
+      try {
+        const whoami = execSync('whoami').toString().trim();
+        if (whoami) {
+          console.log(`Found username from whoami: ${whoami}`);
+          // Extract username from domain\username format
+          const parts = whoami.split('\\');
+          return parts.length > 1 ? parts[1] : whoami;
+        }
+      } catch (cmdError) {
+        console.error('Error executing whoami command:', cmdError);
       }
+    }
+    
+    // If we're in production, use a default username rather than blocking access
+    const isProduction = process.env.NODE_ENV === 'production';
+    if (isProduction) {
+      console.log('In production, using default username: defra-user');
+      return 'defra-user';
     }
     
     // Default fallback
     return 'unknown';
   } catch (error) {
     console.error('Error getting Windows username:', error);
+    
+    // In production, use a default username rather than blocking access
+    const isProduction = process.env.NODE_ENV === 'production';
+    if (isProduction) {
+      return 'defra-user';
+    }
+    
     return 'unknown';
   }
 }

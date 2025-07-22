@@ -5,12 +5,15 @@ import { ssoAuth } from './auth/sso.js'
 import { home } from './home/index.js'
 import { errorPages } from './error/index.js'
 import { serveStaticFiles } from './common/helpers/serve-static-files.js'
+import { headerLogger } from './common/helpers/header-logger.js'
 
 export const router = {
   plugin: {
     name: 'router',
     async register(server) {
       await server.register([inert])
+      
+      await server.register([headerLogger])      
       await server.register([health])
       await server.register([errorPages])
       await server.register([ssoAuth])
