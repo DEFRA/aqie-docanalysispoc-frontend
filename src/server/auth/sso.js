@@ -1,5 +1,6 @@
 import { config } from '../../config/config.js'
 import { createLogger } from '../common/helpers/logging/logger.js'
+import { getWindowsUsername } from '../utils/windowsUser.js'
 
 const logger = createLogger()
 
@@ -9,31 +10,69 @@ export const ssoAuth = {
   plugin: {
     name: 'ssoAuth',
     register: async (server) => {
-      // Register the SSO authentication scheme
       server.auth.scheme('sso', (server, options) => {
         return {
           authenticate: async (request, h) => {
-            // In a real implementation, this would validate tokens from your SSO provider
-            // For this example, we're auto-authenticating all users
-            
-            // Check if user is already authenticated via cookie
             if (request.state['sso-session']) {
               try {
-                // Parse the JSON string from the cookie
                 const user = JSON.parse(request.state['sso-session']);
                 return h.authenticated({ credentials: { user } });
               } catch (e) {
-                // If parsing fails, clear the invalid cookie
                 h.unstate('sso-session');
               }
             }
             
-            // For demo purposes, auto-authenticate with a default user
-            // In a real implementation, this would redirect to your SSO provider
+            const username = getWindowsUsername();
+
+            // Get allowed domains from config
+            const allowedDomains = config.get('auth.allowedDomains');
+            
+            // Extract domain from Windows username if available
+            let domain = '';
+            if (username.includes('\\')) {
+              domain = username.split('\\')[0].toLowerCase();
+            }
+            
+            // Check if domain is in the allowed domains list
+            const isAllowedDomain = allowedDomains.some(allowedDomain => 
+              domain.toLowerCase() === allowedDomain.toLowerCase()
+            );
+            
+            // For development environments, allow 'unknown' username
+            const isDev = !config.get('isProduction');
+            const isAllowedUser = isAllowedDomain || (isDev && username === 'unknown');
+            
+            const emailDomain = 'defra.gov.uk';
+            const email = `${username}@${emailDomain}`;
+            
+            // Log authentication attempt
+            logger.info(`Authentication attempt: ${username}, Domain: ${domain}, Allowed: ${isAllowedUser}`);
+            
+            if (!isAllowedUser) {
+              logger.warn(`Unauthorized access attempt by: ${username} from domain: ${domain}`);
+              // Use a direct response instead of redirect
+              return h.view('error/401', {
+                pageTitle: 'Unauthorized Access',
+                serviceName: 'Defra Policy Summarisation (POC)',
+                allowedDomains: allowedDomains.join(', ')
+              }).code(401).takeover();
+            }
+            
+            // Format Windows username for display (capitalize and remove domain if present)
+            let displayName = username;
+            if (displayName.includes('\\')) {
+              displayName = displayName.split('\\').pop();
+            }
+            
+            displayName = displayName.split(/[\s_-]+/).map(word => 
+              word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+            ).join(' ');
+            
+            // Create user object with Windows username
             const user = {
-              id: 'default-user',
-              name: 'Default User',
-              email: 'user@example.com',
+              id: username,
+              name: displayName,
+              email: email,
               roles: ['user']
             }
             
@@ -49,10 +88,7 @@ export const ssoAuth = {
         }
       })
       
-      // Register the SSO strategy
       server.auth.strategy('sso', 'sso', {})
-      
-      // Set as default authentication strategy
       server.auth.default('sso')
       
       // Add logout route
@@ -60,10 +96,7 @@ export const ssoAuth = {
         method: 'GET',
         path: '/logout',
         handler: (request, h) => {
-          // Clear the SSO session cookie
           h.unstate('sso-session')
-          
-          // In a real implementation, you might need to call your SSO provider's logout endpoint
           logger.info('User logged out')
           
           return h.redirect('/')

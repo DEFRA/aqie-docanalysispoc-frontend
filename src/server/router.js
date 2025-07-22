@@ -3,6 +3,7 @@ import { health } from './health/index.js'
 import { upload } from './upload/index.js'
 import { ssoAuth } from './auth/sso.js'
 import { home } from './home/index.js'
+import { errorPages } from './error/index.js'
 import { serveStaticFiles } from './common/helpers/serve-static-files.js'
 
 export const router = {
@@ -10,17 +11,10 @@ export const router = {
     name: 'router',
     async register(server) {
       await server.register([inert])
-
-      // Health-check route. Used by platform to check if service is running, do not remove!
       await server.register([health])
-
-      // Register SSO authentication
+      await server.register([errorPages])
       await server.register([ssoAuth])
-      
-      // Application specific routes, add your own routes here
       await server.register([home, upload])
-
-      // Static assets
       await server.register([serveStaticFiles])
     }
   }

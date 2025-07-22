@@ -239,6 +239,14 @@ export const config = convict({
     format: String,
     default: 'https://tradeplatform-ai.openai.azure.com/',
     env: 'AI_OPEN_API_URL'
+  },
+  auth: {
+    allowedDomains: {
+      doc: 'List of allowed Windows domains',
+      format: Array,
+      default: ['defra', 'environment-agency', 'naturalengland', 'rpa'],
+      env: 'ALLOWED_DOMAINS'
+    }
   }
 })
 
