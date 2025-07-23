@@ -5,7 +5,6 @@ import CopyPlugin from 'copy-webpack-plugin'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import TerserPlugin from 'terser-webpack-plugin'
 import { WebpackAssetsManifest } from 'webpack-assets-manifest'
-import webpack from 'webpack'
 
 const { NODE_ENV = 'development' } = process.env
 
@@ -23,9 +22,6 @@ export default {
   entry: {
     application: {
       import: ['./javascripts/application.js', './stylesheets/application.scss']
-    },
-    'pdf-upload': {
-      import: ['./javascripts/pdf-upload.js']
     }
   },
   experiments: {
@@ -163,9 +159,6 @@ export default {
   plugins: [
     new CleanWebpackPlugin(),
     new WebpackAssetsManifest(),
-    new webpack.DefinePlugin({
-      'process.env.BACKEND_URL': JSON.stringify(process.env.BACKEND_URL || 'http://localhost:3001')
-    }),
     new CopyPlugin({
       patterns: [
         {

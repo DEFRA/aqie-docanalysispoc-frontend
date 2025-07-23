@@ -1,3 +1,3 @@
-export const getAssetPath = (asset) => {
-  return `/public/${asset}`
-}
+const govukRebrand = true
+
+export { govukRebrand }

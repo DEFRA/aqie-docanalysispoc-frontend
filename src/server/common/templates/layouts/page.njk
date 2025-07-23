@@ -4,18 +4,20 @@
 
 {# Import GOVUK components globally #}
 {% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/header/macro.njk" import govukHeader %}
-{% from "govuk/components/footer/macro.njk" import govukFooter %}
+{% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
+
+{# Import custom components globally #}
+{% from "heading/macro.njk" import appHeading %}
 
 {% set mainClasses = "app-main-wrapper" %}
 
 {% block head %}
-  <link href="/public/stylesheets/application.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/govuk-frontend@4.7.0/dist/govuk/govuk-frontend.min.css">
+  <link href="{{ getAssetPath('stylesheets/application.scss') }}" rel="stylesheet">
+  {# <link rel="stylesheet" href="/public/stylesheets/application.css"> #}
 {% endblock %}
 
 {% block header %}
+  {# serviceName being used in govukHeader will be @deprecated in v6. It has moved to govukServiceNavigation - https://github.com/alphagov/govuk-frontend/blob/main/CHANGELOG.md#move-service-name-and-navigation-links-from-the-govuk-header-to-service-navigation-component #}
   {{ govukHeader({
     homepageUrl: "https://www.gov.uk/",
     classes: "app-header",
@@ -24,6 +26,28 @@
     serviceUrl: serviceUrl,
     useTudorCrown: true
   }) }}
+    {# {% if isAuthenticated %}
+    <div class="govuk-width-container" style="display: flex; justify-content: flex-end;">
+    {{ govukServiceNavigation({
+      navigation: [
+        {
+          text: "Logout",
+          href: "/logout"
+        }
+      ]
+    }) }}
+    </div>
+    {% else %}
+  {% endif %} #}
+{# {% if isAuthenticated %}
+  {{ govukServiceNavigation({
+    navigation: navigation
+  }) }}
+  {% endif %} #}
+    <div class="govuk-width-container" style="display: flex; justify-content: flex-start; align-items: center; margin-top: -37px;">
+      
+    </div>
+
 {% endblock %}
 
 {% block pageTitle %}
@@ -62,14 +86,5 @@
 {% endblock %}
 
 {% block bodyEnd %}
-  <script src="https://cdn.jsdelivr.net/npm/govuk-frontend@4.7.0/dist/govuk/all.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script>
-    // Initialize GOV.UK Frontend
-    if (window.GOVUKFrontend) {
-      window.GOVUKFrontend.initAll();
-    } else if (window.GOVUKPrototypeKit) {
-      window.GOVUKPrototypeKit.initAll();
-    }
-  </script>
+  <script type="module" src="{{ getAssetPath('application.js') }}"></script>
 {% endblock %}

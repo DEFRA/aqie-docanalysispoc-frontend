@@ -54,8 +54,8 @@ export async function createServer() {
       encoding: 'none'
     }
   })
+  // SSO authentication will be registered via the ssoAuth plugin
 
-  // Register plugins
   await server.register([
     requestLogger,
     requestTracing,
@@ -63,7 +63,7 @@ export async function createServer() {
     pulse,
     sessionCache,
     nunjucksConfig,
-    router
+    router // Register all the controllers/routes defined in src/server/router.js
   ])
 
   server.ext('onPreResponse', catchAll)
