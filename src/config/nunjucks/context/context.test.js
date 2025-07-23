@@ -60,7 +60,7 @@ describe.skip('context and cache', () => {
               href: '/logout'
             }
           ],
-          serviceName: 'Defra Policy Summarisation (POC)',
+          serviceName: 'Business case interrogation',
           serviceUrl: '/'
         })
       })
@@ -149,7 +149,7 @@ describe.skip('context and cache', () => {
               href: '/logout'
             }
           ],
-          serviceName: 'Defra Policy Summarisation (POC)',
+          serviceName: 'Business case interrogation',
           serviceUrl: '/'
         })
       })

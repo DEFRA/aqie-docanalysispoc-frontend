@@ -18,7 +18,7 @@ export const upload = {
         {
           method: 'GET',
           path: '/upload',
-          options: { auth: 'sso' },
+          options: { auth: { strategy: 'login', mode: 'required' } },
           handler: (request, h) => {
             const user = request.auth.credentials.user
             const model = request.query.model || 'model1'
@@ -34,7 +34,7 @@ export const upload = {
           method: 'POST',
           path: '/upload',
           options: {
-            auth: 'sso',
+            auth: { strategy: 'login', mode: 'required' },
             payload: {
               output: 'stream',
               parse: true,

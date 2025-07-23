@@ -44,7 +44,7 @@ export const config = convict({
   serviceName: {
     doc: 'Applications Service Name',
     format: String,
-    default: 'Defra Policy Summarisation (POC)'
+    default: 'Business case interrogation'
   },
   root: {
     doc: 'Project root',
