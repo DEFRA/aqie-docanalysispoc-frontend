@@ -239,6 +239,12 @@ export const config = convict({
     format: String,
     default: 'https://tradeplatform-ai.openai.azure.com/',
     env: 'AI_OPEN_API_URL'
+  },
+  backendApiUrl: {
+    doc: 'Backend service url',
+    format: String,
+    default: 'https://aqie-docanalysispoc-backend.dev.cdp-int.defra.cloud',
+    env: 'BACKEND_API_URL'
   }
 })
 
